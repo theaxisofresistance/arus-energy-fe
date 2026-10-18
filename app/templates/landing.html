@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ARUS: Smart IoT Energy Monitoring & Electrical Analytics. Pahami konsumsi listrik, biaya, dan tren energi secara real-time.">
+  <title>ARUS — Smart Energy Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="landing-page">
+  <div class="landing-shell">
+    <nav class="landing-nav page-container" aria-label="Navigasi utama">
+      <a class="brand dark-brand" href="/" aria-label="ARUS - beranda"><span class="brand-mark"><svg><use href="{{ url_for('static', filename='icons.svg') }}#zap"></use></svg></span><span>arus<span class="brand-period">.</span></span></a>
+      <div class="landing-nav-links"><a href="#fitur">Fitur</a><a href="#cara-kerja">Cara Kerja</a><a href="#manfaat">Manfaat</a></div>
+      <a class="nav-cta" href="/dashboard">Buka Dashboard <svg class="icon-sm"><use href="{{ url_for('static', filename='icons.svg') }}#arrow-up-right"></use></svg></a>
+    </nav>
+
+    <main>
+      <section class="landing-hero page-container">
+        <div class="hero-copy">
+          <div class="hero-eyebrow"><span class="eyebrow-dot"></span> SMART IOT ENERGY MONITORING <span class="eyebrow-line"></span> 01</div>
+          <h1>Energi lebih<br><span class="gradient-text">terukur.</span><br>Keputusan<br>lebih cerdas<span class="green-dot">.</span></h1>
+          <p>Pantau setiap watt, pahami pola konsumsi, dan kendalikan biaya listrik—semuanya dari satu dashboard yang intuitif.</p>
+          <div class="hero-actions"><a class="primary-btn" href="/dashboard">Jelajahi Dashboard <svg><use href="{{ url_for('static', filename='icons.svg') }}#arrow-right"></use></svg></a><a class="ghost-btn" href="#cara-kerja"><span class="play-circle"><svg><use href="{{ url_for('static', filename='icons.svg') }}#play"></use></svg></span> Cara Kerja</a></div>
+          <div class="hero-trust"><div class="hero-trust-icon"><svg><use href="{{ url_for('static', filename='icons.svg') }}#shield"></use></svg></div><span>Dirancang untuk rumah, UMKM, dan pengelola fasilitas</span></div>
+        </div>
+        <div class="hero-visual" aria-label="Pratinjau dashboard energi dengan data simulasi">
+          <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div>
+          <div class="hero-app-card">
+            <div class="mockup-top"><span class="mockup-logo"><svg><use href="{{ url_for('static', filename='icons.svg') }}#zap"></use></svg> ARUS <span>ENERGY</span></span><span class="mockup-dots"><i></i><i></i><i></i></span></div>
+            <div class="mockup-heading"><div><small>Energy Overview</small><h3>Monitor energi Anda</h3></div><span class="live-pill"><i></i> SIMULASI</span></div>
+            <div class="mockup-stats"><div><span>Daya Sekarang</span><strong>842 <small>W</small></strong><em>Realtime power</em></div><div><span>Energi Hari Ini</span><strong>7,24 <small>kWh</small></strong><em>Daily consumption</em></div></div>
+            <div class="mockup-graph-header"><span>Consumption Analytics</span><span>24 Jam <svg><use href="{{ url_for('static', filename='icons.svg') }}#chevron-down"></use></svg></span></div>
+            <div class="mockup-chart"><div class="mockup-chart-lines"></div><svg viewBox="0 0 460 170" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="heroArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#b5f45c" stop-opacity=".28"/><stop offset="100%" stop-color="#b5f45c" stop-opacity="0"/></linearGradient></defs><path d="M0 140 C18 130 33 145 48 120 S80 132 99 111 S139 63 154 85 S182 115 202 94 S236 43 256 68 S282 78 301 50 S331 80 353 62 S386 23 407 53 S439 68 460 27 L460 170 L0 170 Z" fill="url(#heroArea)"/><path d="M0 140 C18 130 33 145 48 120 S80 132 99 111 S139 63 154 85 S182 115 202 94 S236 43 256 68 S282 78 301 50 S331 80 353 62 S386 23 407 53 S439 68 460 27" stroke="#c5ff72" stroke-width="3" fill="none" stroke-linecap="round"/></svg><div class="mockup-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div></div>
+            <div class="mockup-bottom"><span><i></i> Device connected</span><span>Data preview • Demo</span></div>
+          </div>
+          <div class="float-info-card float-one"><span class="float-icon"><svg><use href="{{ url_for('static', filename='icons.svg') }}#activity"></use></svg></span><div><small>Monitoring Aktif</small><strong>Real-time Insights</strong></div><span class="float-check">✓</span></div>
+          <div class="float-info-card float-two"><span class="float-icon mint"><svg><use href="{{ url_for('static', filename='icons.svg') }}#chart"></use></svg></span><div><small>AI-Ready Analytics</small><strong>Forecast & Insights</strong></div></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <section class="trust-strip"><div class="page-container trust-strip-content"><span>DIRANCANG UNTUK MONITORING YANG LEBIH CERDAS</span><div><span><svg><use href="{{ url_for('static', filename='icons.svg') }}#cpu"></use></svg> ESP32-S3</span><span><svg><use href="{{ url_for('static', filename='icons.svg') }}#database"></use></svg> PostgreSQL</span><span><svg><use href="{{ url_for('static', filename='icons.svg') }}#activity"></use></svg> Live Analytics</span><span><svg><use href="{{ url_for('static', filename='icons.svg') }}#shield"></use></svg> Offline Buffer Ready</span></div></div></section>
+
+  <section id="fitur" class="features-section page-container section-pad"><div class="section-head"><div><div class="section-eyebrow">/ 01 — FITUR PLATFORM</div><h2>Satu platform.<br><span>Semua insight energi.</span></h2></div><p>Dari pemantauan real-time hingga rekomendasi berbasis data, semuanya dirancang agar penggunaan energi lebih mudah dipahami.</p></div><div class="feature-grid">
+      <article class="feature-card"><span class="feature-icon lime"><svg><use href="{{ url_for('static', filename='icons.svg') }}#activity"></use></svg></span><span class="feature-no">01</span><h3>Real-time Monitoring</h3><p>Lihat tegangan, arus, daya, kWh, frekuensi, dan power factor dalam satu tampilan.</p><div class="feature-bottom">Pemantauan langsung <svg><use href="{{ url_for('static', filename='icons.svg') }}#arrow-up-right"></use></svg></div></article>
+      <article class="feature-card"><span class="feature-icon lilac"><svg><use href="{{ url_for('static', filename='icons.svg') }}#chart"></use></svg></span><span class="feature-no">02</span><h3>Analytics & History</h3><p>Eksplorasi grafik konsumsi, puncak daya, dan perbandingan periode penggunaan.</p><div class="feature-bottom">Visualisasi interaktif <svg><use href="{{ url_for('static', filename='icons.svg') }}#arrow-up-right"></use></svg></div></article>
+      <article class="feature-card"><span class="feature-icon peach"><svg><use href="{{ url_for('static', filename='icons.svg') }}#wallet"></use></svg></span><span class="feature-no">03</span><h3>Cost & Forecast</h3><p>Perkirakan biaya listrik dan proyeksikan konsumsi berdasarkan data historis.</p><div class="feature-bottom">Perencanaan lebih baik <svg><use href="{{ url_for('static', filename='icons.svg') }}#arrow-up-right"></use></svg></div></article>
+      <article class="feature-card"><span class="feature-icon blue"><svg><use href="{{ url_for('static', filename='icons.svg') }}#bell"></use></svg></span><span class="feature-no">04</span><h3>Alerts & Recommendation</h3><p>Dapatkan peringatan kondisi listrik dan saran untuk mengoptimalkan penggunaan energi.</p><div class="feature-bottom">Informasi proaktif <svg><use href="{{ url_for('static', filename='icons.svg') }}#arrow-up-right"></use></svg></div></article>
+    </div></section>
+
+  <section id="cara-kerja" class="workflow-section"><div class="page-container workflow-inner"><div class="section-eyebrow">/ 02 — CARA KERJA</div><div class="workflow-title-row"><h2>Dari sensor,<br>menjadi <span>keputusan.</span></h2><p>Arsitektur tiga lapisan yang memisahkan akuisisi data, pengolahan analytics, dan akses dashboard.</p></div><div class="workflow-steps"><div class="step"><div class="step-number">01</div><div class="step-art"><svg><use href="{{ url_for('static', filename='icons.svg') }}#cpu"></use></svg></div><h3>IoT Device</h3><p>Perangkat mengukur, memvalidasi, dan mengirim data listrik. Buffer lokal menjaga data saat offline.</p></div><span class="workflow-arrow"><svg><use href="{{ url_for('static', filename='icons.svg') }}#arrow-right"></use></svg></span><div class="step"><div class="step-number">02</div><div class="step-art"><svg><use href="{{ url_for('static', filename='icons.svg') }}#database"></use></svg></div><h3>Backend & Analytics</h3><p>Flask dan PostgreSQL menyimpan histori, menghitung konsumsi, mendeteksi pola, dan membuat proyeksi.</p></div><span class="workflow-arrow"><svg><use href="{{ url_for('static', filename='icons.svg') }}#arrow-right"></use></svg></span><div class="step"><div class="step-number">03</div><div class="step-art"><svg><use href="{{ url_for('static', filename='icons.svg') }}#layout"></use></svg></div><h3>Dashboard</h3><p>Pengguna mendapat grafik, estimasi biaya, peringatan, dan rekomendasi yang bisa ditindaklanjuti.</p></div></div></div></section>
+
+  <section id="manfaat" class="final-cta page-container"><div class="final-cta-card"><div class="cta-noise"></div><div class="final-cta-content"><span class="section-eyebrow">MULAI DARI SINI</span><h2>Setiap watt punya cerita.<br><span>Mulai pahami milikmu.</span></h2><p>Jelajahi dashboard menggunakan data dummy yang sudah disiapkan. Siap disambungkan ke perangkat IoT saat hardware tersedia.</p><a class="primary-btn" href="/dashboard">Coba Dashboard Demo <svg><use href="{{ url_for('static', filename='icons.svg') }}#arrow-right"></use></svg></a></div><div class="cta-circle cta-circle-one"></div><div class="cta-circle cta-circle-two"></div></div></section>
+  <footer class="landing-footer page-container"><a class="brand dark-brand" href="/"><span class="brand-mark"><svg><use href="{{ url_for('static', filename='icons.svg') }}#zap"></use></svg></span><span>arus<span class="brand-period">.</span></span></a><span>© 2026 ARUS · Smart IoT Energy Monitoring & Electrical Analytics</span><a href="/dashboard">Dashboard <svg class="icon-sm"><use href="{{ url_for('static', filename='icons.svg') }}#arrow-up-right"></use></svg></a></footer>
+</body></html>

@@ -1,0 +1,10 @@
+{
+  "device_id": "esp32-s3-01",
+  "timestamp": "2026-10-18T14:00:00Z",
+  "voltage_v": 221.8,
+  "current_a": 2.15,
+  "power_w": 448.3,
+  "energy_kwh": 250.12345,
+  "frequency_hz": 50.01,
+  "power_factor": 0.94
+}

@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: arus_energy
+      POSTGRES_USER: arus
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-arus_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arus -d arus_energy"]
+      interval: 8s
+      timeout: 5s
+      retries: 12
+
+  web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://arus:arus_password@postgres:5432/arus_energy}
+      SECRET_KEY: ${SECRET_KEY:-development-only-change-before-production}
+      IOT_API_KEY: ${IOT_API_KEY:-development-iot-key-change-me}
+      DEFAULT_DEVICE_ID: esp32-s3-01
+      AUTO_SEED_DEMO: ${AUTO_SEED_DEMO:-true}
+      DEMO_MODE: ${DEMO_MODE:-true}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
