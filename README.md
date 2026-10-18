@@ -39,7 +39,7 @@ python -m venv .venv
 source .venv/bin/activate       # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 cp .env.example .env            # Windows: copy .env.example .env
-python app.py
+python index.py
 ```
 
 PostgreSQL **harus menyala** untuk API; jika mati, landing page tetap bisa dibuka dan dashboard memberi pesan status koneksi yang jelas. Tabel dibuat otomatis saat aplikasi mulai.
@@ -52,7 +52,7 @@ Salin connection string dari **Neon Console → Connect**, lalu simpan sebagai `
 cp .env.example .env
 # Edit DATABASE_URL dengan URL Neon, misalnya:
 # postgresql://USER:PASSWORD@HOST.neon.tech/DBNAME?sslmode=require
-python app.py
+python index.py
 ```
 
 Saat aplikasi pertama kali tersambung, tabel dibuat otomatis. `docker compose up --build` juga memakai `DATABASE_URL` dari `.env` bila tersedia; tanpa itu Compose memakai PostgreSQL lokal.
@@ -146,7 +146,7 @@ Energi per rentang dihitung dari **selisih pembacaan counter kumulatif** (delta 
 
 ```text
 arus-energy/
-├── app.py
+├── index.py                  # Entry point Vercel, Gunicorn, dan lokal
 ├── app/
 │   ├── __init__.py            # Flask routes, PostgreSQL, validasi ingest
 │   ├── database.py            # Model SQLAlchemy dan constraint database
