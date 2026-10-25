@@ -59,6 +59,8 @@ Saat aplikasi pertama kali tersambung, tabel dibuat otomatis. `docker compose up
 
 ## Tampilan dan fitur
 
+Dokumentasi gabungan rancangan perangkat, perbandingan ESP32/ESP8266, fitur web, tech stack, dan pemetaan use case tersedia dalam format Microsoft Word di [`docs/DOKUMENTASI_ARUS.docx`](docs/DOKUMENTASI_ARUS.docx).
+
 **Landing page:** hero produk, fitur monitoring, tiga lapisan arsitektur (IoT Device → Backend → User), CTA langsung ke dashboard, tampilan responsif.
 
 **Dashboard:**
@@ -98,6 +100,29 @@ curl -X POST http://localhost:5000/api/ingest \
 Ganti contoh timestamp dengan waktu ISO UTC sekarang (`Z`) dan ganti API key melalui `.env`/`docker-compose` sebelum koneksi nyata. Timestamp bersifat opsional (akan diisi server jika kosong), tetapi kalau dikirim wajib menyertakan zona waktu. Data meter harus memakai **kWh kumulatif**, bukan kWh penggunaan interval. Tujuh field sensor adalah numerik dan wajib ada. Server menolak input di luar batas, duplikat timestamp, dan key tidak valid.
 
 Contoh publisher Python juga tersedia: `python examples/send_iot.py` (gunakan `IOT_API_KEY` dan `ARUS_URL` dari environment).
+
+### ESP8266 dengan data dummy acak
+
+Sketch siap-upload tersedia di [`examples/send_iot_esp8266/send_iot_esp8266.ino`](examples/send_iot_esp8266/send_iot_esp8266.ino). Sketch membuat telemetri listrik dummy yang saling konsisten, menaikkan counter energi kumulatif, lalu mengirimkannya setiap 30 detik ke API ARUS.
+
+1. Jalankan backend dengan `docker compose up --build -d`.
+2. Di Arduino IDE, install board **esp8266 by ESP8266 Community**, lalu pilih board ESP8266 yang dipakai (misalnya NodeMCU 1.0).
+3. Ubah `WIFI_SSID`, `WIFI_PASSWORD`, `INGEST_URL`, dan `API_KEY` di bagian atas sketch.
+4. Isi `INGEST_URL` dengan URL final HTTPS, misalnya `https://arus-energy.example.com/api/ingest`, tanpa `/` di bagian akhir. `localhost` tidak dapat digunakan karena dari ESP8266 alamat itu menunjuk ke ESP8266 sendiri.
+5. Upload, buka Serial Monitor pada 115200 baud, lalu cari respons `HTTP 201`.
+
+Setelah pembacaan pertama tersimpan, pilih `esp8266-dummy-01` melalui dropdown **Perangkat** di dashboard. Pilihan disimpan dalam URL, sehingga dashboard juga bisa langsung dibuka dengan `dashboard?device_id=esp8266-dummy-01`. Data mentah dapat diperiksa lewat `GET /api/overview?device_id=esp8266-dummy-01`. Sketch memakai HTTPS dengan `setInsecure()` untuk demo: trafik tetap terenkripsi, tetapi identitas sertifikat server tidak diverifikasi. Gunakan CA certificate dan API key yang kuat untuk produksi.
+
+### ESP32-S3 Wokwi dengan dua potensiometer
+
+Sketch terintegrasi tersedia di [`examples/send_iot_esp32s3_wokwi/send_iot_esp32s3_wokwi.ino`](examples/send_iot_esp32s3_wokwi/send_iot_esp32s3_wokwi.ino). Potensiometer pada GPIO 4 mensimulasikan tegangan 180–250 V dan GPIO 5 mensimulasikan arus 0–10 A. Nilai dibaca setiap detik, energi kWh diakumulasi, dan satu payload dikirim ke API setiap 30 detik.
+
+1. Di project Wokwi ESP32-S3, hubungkan pin `SIG` kedua potensiometer ke GPIO 4 dan GPIO 5; hubungkan `VCC` ke 3V3 dan `GND` ke GND.
+2. Salin sketch tersebut ke Wokwi. Wi-Fi simulator sudah memakai `Wokwi-GUEST` tanpa password.
+3. Ganti `INGEST_URL` dengan URL HTTPS deployment ARUS yang publik dan ganti `API_KEY` agar sama dengan `IOT_API_KEY` backend.
+4. Jalankan simulasi dan periksa Serial Monitor. Respons sukses adalah `HTTP 201`.
+
+Sketch menggunakan `DEVICE_ID` yang sama dengan default dashboard, yaitu `esp32-s3-01`. Timestamp tidak dikirim oleh perangkat agar server mengisinya dalam UTC. `localhost` tidak bisa dipakai dari Wokwi; backend lokal harus dipublikasikan melalui URL HTTPS yang dapat dijangkau simulator.
 
 **Urutan migrasi ke hardware:**
 
@@ -167,7 +192,7 @@ arus-energy/
 ├── docker-compose.yml
 ├── Dockerfile
 ├── requirements-dev.txt
-├── docs/USE_CASE_MAPPING.md
+├── docs/DOKUMENTASI_ARUS.docx
 └── .env.example
 ```
 

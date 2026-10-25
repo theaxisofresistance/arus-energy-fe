@@ -2,8 +2,13 @@
   'use strict';
   const $ = (id) => document.getElementById(id);
   const icon = (name) => `<svg><use href="/static/icons.svg#${name}"></use></svg>`;
+  const defaultDeviceId = document.body.dataset.deviceId;
+  const requestedDeviceId = new URLSearchParams(window.location.search).get('device_id');
   const state = {
-    period: '24h', deviceId: document.body.dataset.deviceId,
+    period: '24h',
+    defaultDeviceId,
+    deviceId: requestedDeviceId && /^[A-Za-z0-9_-]{1,64}$/.test(requestedDeviceId)
+      ? requestedDeviceId : defaultDeviceId,
     demoMode: document.body.dataset.demoMode === 'true',
     data: null, busy: false, toastTimer: null,
   };
@@ -194,10 +199,51 @@
     $('historyRows').innerHTML = history.map(r => `<tr><td>${displayDateTime(r.timestamp)}</td><td>${decimal(r.voltage_v, 1)} V</td><td>${decimal(r.current_a, 2)} A</td><td>${decimal(r.power_w, 1)} W</td><td>${decimal(r.energy_kwh, 3)} kWh</td><td>${decimal(r.frequency_hz, 2)} Hz</td><td><span class="source-tag ${r.source === 'iot' ? 'iot' : ''}">${htmlEscape(r.source.toUpperCase())}</span></td></tr>`).join('') || '<tr><td colspan="7" class="empty-data">Belum ada pembacaan.</td></tr>';
   }
 
+  function updateDeviceUrl() {
+    const url = new URL(window.location.href);
+    if (state.deviceId === state.defaultDeviceId) url.searchParams.delete('device_id');
+    else url.searchParams.set('device_id', state.deviceId);
+    window.history.replaceState({}, '', url);
+  }
+
+  function updateDemoControls() {
+    const isDefaultDevice = state.deviceId === state.defaultDeviceId;
+    const simulate = $('simulateButton');
+    const reset = $('resetDemoButton');
+    if (simulate) {
+      simulate.disabled = !isDefaultDevice;
+      simulate.title = isDefaultDevice ? '' : 'Simulasi hanya tersedia untuk perangkat default.';
+    }
+    if (reset) reset.disabled = !isDefaultDevice;
+  }
+
+  async function loadDevices() {
+    const select = $('deviceSelect');
+    select.disabled = true;
+    try {
+      const result = await api('/api/devices');
+      const devices = Array.isArray(result.devices) ? result.devices : [];
+      if (!devices.some(device => device.device_id === state.deviceId)) {
+        devices.unshift({device_id: state.deviceId, name: 'Perangkat terpilih'});
+      }
+      select.innerHTML = devices.map(device => {
+        const name = device.name && device.name !== device.device_id ? ` — ${device.name}` : '';
+        return `<option value="${htmlEscape(device.device_id)}">${htmlEscape(device.device_id + name)}</option>`;
+      }).join('');
+      select.value = state.deviceId;
+    } catch (error) {
+      select.innerHTML = `<option value="${htmlEscape(state.deviceId)}">${htmlEscape(state.deviceId)}</option>`;
+      toast(`Daftar perangkat gagal dimuat: ${error.message}`, true);
+    } finally {
+      select.disabled = false;
+    }
+  }
+
   async function loadDashboard({silent = false} = {}) {
     if (state.busy) return;
     state.busy = true;
     $('refreshButton').disabled = true;
+    $('deviceSelect').disabled = true;
     try {
       const data = await api(`/api/overview?period=${state.period}&device_id=${encodeURIComponent(state.deviceId)}`);
       state.data = data;
@@ -209,6 +255,7 @@
     } finally {
       state.busy = false;
       $('refreshButton').disabled = false;
+      $('deviceSelect').disabled = false;
     }
   }
 
@@ -268,8 +315,16 @@
       await loadDashboard({silent:true});
     } catch (error) {toast(error.message, true);}
   }
-  function init() {
+  async function init() {
     setText('todayDate', new Date().toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'}));
+    $('deviceSelect').addEventListener('change', async event => {
+      state.deviceId = event.target.value;
+      state.data = null;
+      updateDeviceUrl();
+      updateDemoControls();
+      setText('bannerDeviceId', state.deviceId);
+      await loadDashboard();
+    });
     document.querySelectorAll('.range-btn').forEach(btn => btn.addEventListener('click', () => {
       if (state.period === btn.dataset.period) return;
       state.period = btn.dataset.period;
@@ -303,6 +358,8 @@
     }));
     let resizeTimer;
     window.addEventListener('resize', () => {clearTimeout(resizeTimer);resizeTimer = setTimeout(renderCharts, 160);});
+    updateDemoControls();
+    await loadDevices();
     loadDashboard();
     // Auto-refresh is read-only; simulator inserts a new point only on user action.
     setInterval(() => {if (!document.hidden && $('settingsModal').hidden) loadDashboard({silent:true});}, 20000);

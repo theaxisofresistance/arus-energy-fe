@@ -23,7 +23,9 @@ class EnergyAppTests(unittest.TestCase):
     def test_pages_and_health(self):
         self.assertEqual(self.client.get('/').status_code, 200)
         self.assertIn(b'Keputusan', self.client.get('/').data)
-        self.assertEqual(self.client.get('/dashboard').status_code, 200)
+        dashboard = self.client.get('/dashboard')
+        self.assertEqual(dashboard.status_code, 200)
+        self.assertIn(b'id="deviceSelect"', dashboard.data)
         self.assertEqual(self.client.get('/api/health').json['status'], 'ok')
 
     def test_neon_database_url_uses_psycopg3(self):
@@ -52,6 +54,8 @@ class EnergyAppTests(unittest.TestCase):
         self.assertEqual(self.client.post('/api/ingest', json=payload).status_code, 401)
         headers = {'X-API-Key': 'test-key'}
         self.assertEqual(self.client.post('/api/ingest', json=payload, headers=headers).status_code, 201)
+        device_ids = [item['device_id'] for item in self.client.get('/api/devices').json['devices']]
+        self.assertIn('test-meter', device_ids)
         self.assertEqual(self.client.post('/api/ingest', json=payload, headers=headers).status_code, 409)
         bad = {**payload, 'power_factor': 2}
         self.assertEqual(self.client.post('/api/ingest', json=bad, headers=headers).status_code, 422)
